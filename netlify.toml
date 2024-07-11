@@ -1,2 +1,4 @@
 [build]
     functions="functions"
+    directory = "functions"
+    included_files = ["./file.json"]
