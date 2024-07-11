@@ -2,3 +2,10 @@
     functions="functions"
     directory = "functions"
     included_files = ["./file.json"]
+
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "*"
+    Access-Control-Allow-Headers = "*"
