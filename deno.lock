@@ -19,6 +19,7 @@
         "npm:dayjs@^1.11.9",
         "npm:express@^4.19.2",
         "npm:fbjs@^0.8.5",
+        "npm:mongodb@^6.8.0",
         "npm:netlify-cli@^17.33.1",
         "npm:serverless-http@^3.2.0"
       ]
