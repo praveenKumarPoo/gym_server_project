@@ -28,7 +28,11 @@ const neelamUserModel = new Schema({
       },
     zip: {
         type: String,
-      }
+      },
+  image: {
+    publicUrl: { type: String },
+    imageName: { type: String }
+  }
 });
 
 const User_list = model('user_list', neelamUserModel);

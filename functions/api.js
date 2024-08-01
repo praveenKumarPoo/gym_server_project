@@ -8,10 +8,35 @@ const Datefs = require( 'date-fns');
 const mongoose = require('mongoose')
 const Gym_user = require('./User');
 const User_list = require('./neelamUsers');
+const cloudinary  = require('./cloudinary');
 let uri = `mongodb+srv://Pooprav:8igvJKHVlWNlhk5g@poopravcluster0.clos40k.mongodb.net/rpesanddips?retryWrites=true&w=majority&appName=poopravCluster0`;
 mongoose.connect(uri).then(() => {
   console.log("connected");
 })
+
+const uploadImage = async (imagePath) => {
+
+  // Use the uploaded file's name as the asset's public ID and 
+  // allow overwriting the asset with new versions
+  // const options = {
+  //   use_filename: true,
+  //   unique_filename: false,
+  //   overwrite: true,
+  // };
+
+  try {
+    // Upload the image
+    const result = await cloudinary.uploader.upload(imagePath, {folder: "profile"});
+    return {
+      imageName: result.asset_id,
+      publicUrl : result.secure_url
+    }
+  } catch (error) {
+    console.log("cloudinary error")
+    console.error(error);
+  }
+};
+
 
 const app = express();
 
@@ -24,8 +49,12 @@ router.get("/hello", (req, res) => {
 });
 
 router.post("/add_new_neelam_user", async (req, res) => {
-  const { newUserData = {} } = req.body;
-  const addNewRecord =  new User_list(newUserData)
+  let { newUserData = {} } = req.body;
+  const { imageUrl } = newUserData;
+  const image = await uploadImage(imageUrl)
+  console.log(image);
+  delete newUserData["imageUrl"];
+  const addNewRecord =  new User_list({...newUserData, image })
   addNewRecord.save().then((AddedData) => {
     res.send(AddedData)
   });
@@ -38,7 +67,8 @@ router.get("/neelam_user_list", async (req, res) => {
   });
 })
 
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(cors())
 const updateMasterData = async (newUserData, deleteFlag, res) => {
   await Gym_user.exists({ _id: newUserData['_id'] }).then((isExists) => {
