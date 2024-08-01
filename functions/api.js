@@ -31,6 +31,13 @@ router.post("/add_new_neelam_user", async (req, res) => {
   });
 })
 
+router.get("/neelam_user_list", async (req, res) => {
+  User_list.find().then((data) => {
+    console.log(data)
+    res.send(data);
+  });
+})
+
 app.use(express.json());
 app.use(cors())
 const updateMasterData = async (newUserData, deleteFlag, res) => {
